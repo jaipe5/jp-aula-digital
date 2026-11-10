@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juegos educativos | JP Aula Digital</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f0f4f8;color:#172b49}
+header{background:#142b50;color:white;text-align:center;padding:32px 16px}
+header h1{margin:0 0 10px}
+main{max-width:1000px;margin:25px auto;padding:0 14px}
+section{background:white;padding:22px;border-radius:16px;margin-bottom:20px;box-shadow:0 4px 14px #0001}
+h2{color:#174a83}
+a{color:#1764c0}
+#grid{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:2px;max-width:630px;margin:20px auto}
+.cell{padding:0;aspect-ratio:1;border:1px solid #d5dfeb;background:#f8fafc;border-radius:3px;font-size:clamp(9px,2vw,17px);font-weight:bold;cursor:pointer;color:#18365e}
+.cell.start{background:#ffdc75}
+.cell.found{background:#79dfaf;color:#103d2c}
+.words{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:9px;margin:18px 0}
+.word{padding:9px;background:#edf3fa;border-radius:7px;font-size:14px}
+.word.done{background:#cef5df;text-decoration:line-through}
+button.action{background:#1764c0;color:white;border:0;border-radius:8px;padding:12px 18px;cursor:pointer;font-size:15px}
+button.action:hover{background:#104b91}
+#status{font-weight:bold;min-height:25px}
+footer{text-align:center;padding:24px;color:#64748b}
+@media(max-width:480px){section{padding:12px}#grid{gap:1px}.cell{border-radius:1px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🧩 Juegos educativos</h1>
+<p>JP Aula Digital · Formación Profesional</p>
+</header>
+<main>
+<p><a href="index.html">← Volver a JP Aula Digital</a></p>
+
+<section>
+<h2>🔌 Sopa de letras: Buses y conexiones</h2>
+<p><strong>Fundamentos de Hardware · 1.º ASIR</strong></p>
+<p>Encuentra las 15 palabras. Pueden estar en horizontal,
+vertical o diagonal, en ambos sentidos.</p>
+<p><strong>Instrucciones:</strong> pulsa la primera letra de una palabra
+y después su última letra. Las palabras encontradas aparecerán en verde.</p>
+
+<h3 id="counter">Palabras encontradas: 0 de 15</h3>
+<div id="words" class="words"></div>
+<div id="grid" aria-label="Sopa de letras"></div>
+<p id="status" aria-live="polite">Selecciona la primera letra.</p>
+<button class="action" onclick="newGame()">🔄 Nuevo juego</button>
+</section>
+
+<section>
+<h2>🔗 Relacionar conceptos</h2>
+<p>Próximamente: relaciona buses, interfaces y conectores con sus definiciones.</p>
+</section>
+
+<section>
+<h2>✍️ Completar frases</h2>
+<p>Próximamente: completa afirmaciones sobre los componentes del ordenador.</p>
+</section>
+
+<section>
+<h2>🧠 Tarjetas de memoria</h2>
+<p>Próximamente: aprende conceptos mediante preguntas y respuestas.</p>
+</section>
+</main>
+<footer>
+IES María de Zayas y Sotomayor · Prof. Jaime Pérez Egas
+</footer>
+
+<script>
+const words=[
+"BUS","DATOS","DIRECCION","CONTROL","INTERFAZ",
+"CONECTOR","PROTOCOLO","USB","PCIE","SATA",
+"CONTROLADOR","DRIVER","TECLADO","SERIE","NVME"
+];
+const N=18;
+const dirs=[
+[0,1],[1,0],[1,1],[1,-1],
+[0,-1],[-1,0],[-1,-1],[-1,1]
+];
+let board,positions,found,start;
+
+function newGame(){
+  let success=false;
+  for(let attempt=0;attempt<20&&!success;attempt++){
+    board=Array.from({length:N},()=>Array(N).fill(""));
+    positions={};
+    success=true;
+    for(const word of [...words].sort((a,b)=>b.length-a.length)){
+      let placed=false;
+      for(let tries=0;tries<1500&&!placed;tries++){
+        const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)];
+        const r=Math.floor(Math.random()*N);
+        const c=Math.floor(Math.random()*N);
+        const cells=[];
+        let valid=true;
+        for(let i=0;i<word.length;i++){
+          const y=r+dr*i,x=c+dc*i;
+          if(y<0||x<0||y>=N||x>=N||
+             (board[y][x]&&board[y][x]!==word[i])){
+            valid=false;break;
+          }
+          cells.push([y,x]);
+        }
+        if(valid){
+          cells.forEach(([y,x],i)=>board[y][x]=word[i]);
+          positions[word]=cells;
+          placed=true;
+        }
+      }
+      if(!placed){success=false;break}
+    }
+  }
+  if(!success){
+    document.getElementById("status").textContent=
+      "No se pudo generar el tablero. Pulsa Nuevo juego.";
+    return;
+  }
+  const abc="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+  board=board.map(row=>row.map(ch=>
+    ch||abc[Math.floor(Math.random()*abc.length)]
+  ));
+  found=new Set();
+  start=null;
+  document.getElementById("status").textContent=
+    "Selecciona la primera letra.";
+  render();
+}
+
+function render(){
+  const grid=document.getElementById("grid");
+  grid.innerHTML="";
+  const selected=new Set();
+  for(const w of found){
+    for(const [r,c] of positions[w])selected.add(r+","+c);
+  }
+  board.forEach((row,r)=>row.forEach((letter,c)=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="cell";
+    b.textContent=letter;
+    b.setAttribute("aria-label",letter+" fila "+(r+1)+" columna "+(c+1));
+    if(selected.has(r+","+c))b.classList.add("found");
+    if(start&&start[0]===r&&start[1]===c)b.classList.add("start");
+    b.onclick=()=>choose(r,c);
+    grid.appendChild(b);
+  }));
+  document.getElementById("words").innerHTML=words.map(w=>
+    '<div class="word '+(found.has(w)?"done":"")+'">'+w+'</div>'
+  ).join("");
+  document.getElementById("counter").textContent=
+    "Palabras encontradas: "+found.size+" de "+words.length;
+}
+
+function choose(r,c){
+  if(!start){
+    start=[r,c];
+    document.getElementById("status").textContent=
+      "Ahora pulsa la última letra.";
+    render();
+    return;
+  }
+  const a=start,b=[r,c];
+  start=null;
+  let match=null;
+  for(const w of words){
+    if(found.has(w))continue;
+    const cells=positions[w];
+    const first=cells[0],last=cells[cells.length-1];
+    const same=(p,q)=>p[0]===q[0]&&p[1]===q[1];
+    if((same(a,first)&&same(b,last))||
+       (same(a,last)&&same(b,first))){
+      match=w;break;
+    }
+  }
+  if(match){
+    found.add(match);
+    document.getElementById("status").textContent=
+      found.size===words.length
+      ?"🎉 ¡Enhorabuena! Has encontrado las 15 palabras."
+      :"✅ Correcto: "+match;
+  }else{
+    document.getElementById("status").textContent=
+      "Inténtalo de nuevo. Selecciona los extremos de una palabra.";
+  }
+  render();
+}
+newGame();
+</script>
+</body>
+</html>
