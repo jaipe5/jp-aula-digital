@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test de buses y conexiones · JP Aula Digital</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#172b48;background:#edf3fa}*{box-sizing:border-box}body{margin:0}header{background:#132d55;color:white;padding:23px 18px;text-align:center}header h1{margin:0 0 5px;font-size:clamp(23px,4vw,33px)}header p{margin:0;color:#d4e4ff}.wrap{max-width:800px;margin:24px auto;padding:0 15px}.panel{background:white;padding:clamp(20px,4vw,34px);border-radius:17px;box-shadow:0 6px 23px #1233 0} .meta{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:#526884;font-weight:600}.track{height:10px;background:#e7edf5;border-radius:100px;overflow:hidden;margin:13px 0 26px}.bar{height:100%;width:0;background:#1684d5;transition:width .2s}h2{font-size:clamp(19px,3.3vw,25px);line-height:1.35;margin:0 0 20px} .options{display:grid;gap:11px}.choice{display:flex;gap:11px;align-items:flex-start;border:2px solid #dbe5f0;border-radius:12px;padding:15px;cursor:pointer;background:#fff;line-height:1.4} .choice:has(input:checked){border-color:#176ac4;background:#eef6ff}.choice input{margin-top:3px;accent-color:#176ac4;transform:scale(1.2)}.buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:25px}button,.back{border:0;border-radius:10px;padding:12px 19px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none}button.primary{background:#176ac4;color:white}button.secondary,.back{background:#e7edf5;color:#153657}button:disabled{opacity:.45;cursor:not-allowed}.score{text-align:center;font-size:46px;font-weight:800;color:#176ac4}.result{padding:14px 0;border-bottom:1px solid #e4eaf1}.result p{margin:7px 0}.correct{color:#117447;font-weight:700}.incorrect{color:#a12b2b;font-weight:700}footer{text-align:center;color:#5d6c81;font-size:13px;padding:23px}a{color:#176ac4}.notice{background:#f2f7fc;border-radius:10px;padding:12px 14px;font-size:14px;color:#455a74}
+</style>
+</head>
+<body>
+<header><h1>Test · Buses y conexiones</h1><p>Fundamentos de Hardware · 1.º ASIR · JP Aula Digital</p></header>
+<main class="wrap"><div class="panel" id="app"></div><footer><a href="index.html">← Volver a JP Aula Digital</a><p>IES María de Zayas y Sotomayor · Prof. Jaime Pérez Egas</p></footer></main>
+<script>
+const bank=[
+['¿Qué es un bus de comunicación en un ordenador?',['Un sistema que permite transferir información entre componentes','Una aplicación de mantenimiento','Un tipo de memoria permanente','Un ventilador de la placa base'],0,'Un bus permite el intercambio de información y señales entre componentes.'],
+['En el modelo clásico, ¿qué transporta el bus de datos?',['Órdenes eléctricas de la fuente','Información entre componentes','Solo direcciones de memoria','Energía para el monitor'],1,'El bus de datos transporta la información que intercambian los componentes.'],
+['¿Para qué sirve el bus de direcciones?',['Refrigerar la CPU','Suministrar 12 V','Identificar posiciones de memoria o destinos','Reproducir audio'],2,'Las direcciones identifican una posición o destino de acceso.'],
+['¿Qué transporta un bus de control?',['Únicamente imágenes','Solo datos de usuario','Archivos comprimidos','Señales que coordinan operaciones'],3,'Las señales de control coordinan operaciones como lectura y escritura.'],
+['¿Cuál es un ejemplo de conector físico?',['USB tipo C','Controlador xHCI','Protocolo TCP','Driver de impresora'],0,'USB-C describe un tipo de conector físico, no una velocidad concreta.'],
+['¿Qué es un controlador hardware?',['Un documento de texto','Un circuito que gestiona operaciones de un dispositivo o interfaz','Una carpeta del sistema','Un cable de alimentación'],1,'El controlador hardware es circuitería que gobierna una función del dispositivo.'],
+['¿Qué es un driver o controlador de dispositivo en software?',['Un puerto físico','Una pista de cobre','Software que permite al sistema operativo gestionar un dispositivo','Un conector eléctrico'],2,'El driver es software que comunica el sistema operativo con el hardware correspondiente.'],
+['¿Qué caracteriza a USB como comunicación de datos?',['Siempre comunica en paralelo','Solo sirve para almacenar archivos','No utiliza protocolos','Transmite datos mediante comunicación serie'],3,'USB es una tecnología de comunicación serie.'],
+['¿Qué conexión se usa habitualmente para tarjetas gráficas dedicadas?',['PCI Express','SATA de datos','Puerto de audio de 3,5 mm','Conector RJ-11'],0,'Las tarjetas gráficas dedicadas suelen usar ranuras PCIe.'],
+['¿Qué representa un carril PCIe?',['Una pista para conectar ventiladores','Un conjunto de enlaces diferenciales para transmitir y recibir datos','Un archivo del firmware','Una clavija de alimentación SATA'],1,'Un carril PCIe incluye un par diferencial para transmitir y otro para recibir.'],
+['¿Cuál es una interfaz habitual para conectar unidades HDD y SSD SATA?',['HDMI','PS/2','SATA','VGA'],2,'SATA conecta unidades de almacenamiento compatibles con esa interfaz.'],
+['¿Qué describe el formato M.2?',['Un tipo de monitor','Una versión de Windows','Un protocolo de Internet','Un formato físico de módulos y sus conectores'],3,'M.2 es un formato; las unidades pueden emplear PCIe/NVMe o SATA según compatibilidad.'],
+['¿Cuál de estas afirmaciones sobre USB-C es correcta?',['La forma del conector no determina por sí sola la velocidad','Todos los USB-C tienen idéntica velocidad','USB-C siempre es más rápido que PCIe','USB-C es un sistema operativo'],0,'La velocidad depende de las capacidades USB implementadas y del enlace, no solo de la forma.'],
+['Al pulsar una tecla de un teclado USB, ¿qué ocurre?',['La GPU inicia directamente un programa','El teclado comunica el evento de entrada al equipo mediante USB','Se escribe directamente en el SSD sin intervención de software','El monitor envía primero una orden al teclado'],1,'El teclado comunica cambios de estado a través de USB; el software interpreta la entrada.'],
+['¿Dónde suele estar integrado el controlador USB en un PC moderno?',['En la cubierta del teclado','En el cable HDMI','En la plataforma del equipo, por ejemplo en el chipset o procesador','En el ratón exclusivamente'],2,'El controlador anfitrión USB suele formar parte de la plataforma del ordenador.'],
+['¿Cuál es la función principal de un protocolo de comunicación?',['Elegir el color de los puertos','Fabricar físicamente los conectores','Sustituir al procesador','Establecer reglas para intercambiar información'],3,'El protocolo define cómo se estructuran e intercambian los mensajes.'],
+['¿Cuál de los siguientes es un ejemplo de interfaz de almacenamiento?',['SATA','Fuente ATX','Pasta térmica','Disipador'],0,'SATA es una interfaz empleada en almacenamiento.'],
+['¿Qué permite normalmente un puerto USB además de transmitir datos?',['Generar imágenes por sí solo','Suministrar energía eléctrica a dispositivos compatibles','Sustituir siempre la RAM','Arrancar la CPU sin placa base'],1,'USB puede transportar datos y suministrar alimentación.'],
+['¿Qué significa que una comunicación sea en serie?',['Que usa siempre ocho cables de datos','Que carece de sincronización','Que transmite bits sucesivamente por un enlace','Que solamente funciona con discos duros'],2,'La transmisión serie envía los bits de forma sucesiva en el enlace.'],
+['¿Qué diferencia existe entre un conector y un protocolo?',['Son exactamente lo mismo','El conector es siempre software','El protocolo es la pieza donde se inserta el cable','El conector es físico y el protocolo establece reglas de comunicación'],3,'El conector es una pieza física; el protocolo establece reglas de intercambio.']
+];
+let questions=[],answers=[],step=0;
+const app=document.getElementById('app');
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function start(){
+ // Distribuir exactamente cinco respuestas correctas en cada posición A-D.
+ const slots=shuffle(Array.from({length:20},(_,i)=>i%4));
+ questions=shuffle(bank.map(q=>({text:q[0],options:q[1],correct:q[2],why:q[3]}))).map((q,i)=>{
+  const correct=q.options[q.correct],wrong=shuffle(q.options.filter((_,idx)=>idx!==q.correct));
+  const opts=[...wrong];opts.splice(slots[i],0,correct);return {...q,options:opts,correct:slots[i]};
+ });
+ answers=Array(questions.length).fill(null);step=0;render();
+}
+function render(){
+ const q=questions[step],chosen=answers[step];
+ app.innerHTML=`<div class="meta"><span>Pregunta ${step+1} de ${questions.length}</span><span>0,5 puntos por acierto</span></div><div class="track"><div class="bar" style="width:${(step+1)/questions.length*100}%"></div></div><h2>${escapeHtml(q.text)}</h2><div class="options">${q.options.map((t,i)=>`<label class="choice"><input type="radio" name="answer" value="${i}" ${chosen===i?'checked':''}><span><b>${'ABCD'[i]})</b> ${escapeHtml(t)}</span></label>`).join('')}</div><div class="buttons"><button class="secondary" id="prev" ${step===0?'disabled':''}>← Anterior</button><button class="primary" id="next" ${chosen===null?'disabled':''}>${step===questions.length-1?'Finalizar y corregir':'Siguiente →'}</button></div>`;
+ app.querySelectorAll('input[name="answer"]').forEach(r=>r.onchange=()=>{answers[step]=Number(r.value);app.querySelector('#next').disabled=false});
+ app.querySelector('#prev').onclick=()=>{if(step>0){step--;render()}};
+ app.querySelector('#next').onclick=()=>{if(answers[step]===null)return;if(step<questions.length-1){step++;render()}else showResults()};
+}
+function showResults(){const hits=questions.reduce((n,q,i)=>n+(answers[i]===q.correct),0);const score=(hits*.5).toFixed(1).replace('.',',');
+ app.innerHTML=`<h2>Resultado del test</h2><div class="score">${score} / 10</div><p style="text-align:center"><b>${hits} aciertos de 20 preguntas</b></p><p class="notice">Este resultado se calcula en tu navegador. No se envía al profesor ni se guarda automáticamente.</p><h2>Revisión de respuestas</h2>${questions.map((q,i)=>`<div class="result"><b>${i+1}. ${escapeHtml(q.text)}</b><p class="${answers[i]===q.correct?'correct':'incorrect'}">${answers[i]===q.correct?'✓ Correcta':'✗ Incorrecta'} · Tu respuesta: ${'ABCD'[answers[i]]}) ${escapeHtml(q.options[answers[i]])}</p><p><b>Respuesta correcta:</b> ${'ABCD'[q.correct]}) ${escapeHtml(q.options[q.correct])}</p><p>${escapeHtml(q.why)}</p></div>`).join('')}<div class="buttons"><button class="primary" id="again">Repetir con otro orden</button><a class="back" href="index.html">Volver a JP Aula Digital</a></div>`;
+ document.querySelector('#again').onclick=start;window.scrollTo(0,0);
+}
+start();
+</script>
+</body>
+</html>
