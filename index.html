@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JP Aula Digital</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172033;
+    }
+    header {
+      background: #142b50;
+      color: white;
+      padding: 45px 20px;
+      text-align: center;
+    }
+    header h1 { font-size: 38px; margin: 0 0 12px; }
+    header p { font-size: 17px; margin: 0; }
+    main {
+      max-width: 1050px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      padding: 28px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px #00000012;
+    }
+    .card h2 { color: #174a83; }
+    .card a {
+      display: inline-block;
+      background: #1764c0;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 11px 17px;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 15px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JP Aula Digital</h1>
+    <p>MicroApps y recursos interactivos para Formación Profesional</p>
+  </header>
+
+  <main>
+    <div class="grid">
+      <section class="card">
+        <h2>📚 Enseñanza</h2>
+        <p>Lecturas, frases de aprendizaje y presentaciones.</p>
+        <a href="#ensenanza">Próximamente</a>
+      </section>
+
+      <section class="card">
+        <h2>✅ Evaluación</h2>
+        <p>Test interactivos, verdadero o falso y actividades.</p>
+        <a href="#evaluacion">Próximamente</a>
+      </section>
+
+      <section class="card">
+        <h2>🧩 Juegos educativos</h2>
+        <p>Sopas de letras y ejercicios de relacionar conceptos.</p>
+        <a href="#juegos">Próximamente</a>
+      </section>
+
+      <section class="card">
+        <h2>🖥️ Simuladores</h2>
+        <p>Hardware, conexiones y herramientas de aprendizaje.</p>
+        <a href="#simuladores">Próximamente</a>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    IES María de Zayas y Sotomayor · Prof. Jaime Pérez Egas
+  </footer>
+</body>
+</html>
